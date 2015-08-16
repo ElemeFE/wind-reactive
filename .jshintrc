@@ -1,0 +1,26 @@
+{
+    "camelcase": false,
+    "quotmark": "single",
+    "laxcomma": true,
+    "esnext": true,
+    "undef": true,
+    "unused": true,
+    "indent": 2,
+
+    "browser": true,
+
+    "globals": {
+        "$": true,
+        "$element": true,
+        "console": true,
+        "confirm": true,
+        "describe": true,
+        "it": true,
+        "require": true,
+        "module": true,
+        "alert": true,
+        "_": true,
+        "__dirname": true,
+        "beforeEach": true
+    }
+}
