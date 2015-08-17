@@ -144,7 +144,7 @@ Reactive.prototype.updateBinding = function(binding) {
 
   var value;
 
-  if (binding.type === 'on') {
+  if (binding.type === 'event') {
     value = fn.bind(model);
   } else {
     if (typeof fn === 'function') {

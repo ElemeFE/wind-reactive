@@ -4,12 +4,14 @@ var compile = require('wind-compiler').compile;
 
 var Carousel = function() {
   View.apply(this, arguments);
+  this.state.setActiveSlide = function() {
+  };
 };
 
 Carousel.prototype = new View();
 Carousel.prototype.constructor = Carousel;
 
-Carousel.prototype.template = compile('<div class="carousel-wrapper"><ul class="carousel-list"><yield /></ul><ol class="carousel-pager"><li class="page-number" r-repeat="slide in content" r-class="active: slide.active" r-click="setActiveSlide($index)">{{$index + 1}}</li></ol></div>');
+Carousel.prototype.template = compile('<div class="carousel-wrapper"><ul class="carousel-list"><yield /></ul><ol class="carousel-pager"><li class="page-number" repeat="slide in content" [class]="active: slide.active" (click)="setActiveSlide($index)">{{$index + 1}}</li></ol></div>');
 
 factory.register('r-carousel', Carousel);
 

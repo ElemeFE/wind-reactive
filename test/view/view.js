@@ -54,7 +54,7 @@ describe('View unit test', function() {
     this.slow(2000);
 
     it('should create nested view', function(done) {
-      var template = compile('<r-carousel ref="test" horizontal duration="300" test="{{testValue}}"></r-carousel>');
+      var template = compile('<r-carousel ref="test" horizontal duration="300" [test]="testValue"></r-carousel>');
 
       var model = {
         testValue: 'test'

@@ -5,7 +5,7 @@ describe('binders unit test', function() {
   this.slow(1000);
 
   describe('text binder test', function() {
-    var template = parse('<div r-text="label"></div>');
+    var template = parse('<div [text]="label"></div>');
     var model = { label: 'test' };
 
     it('should execute text binders', function() {
@@ -27,7 +27,7 @@ describe('binders unit test', function() {
   });
 
   describe('html binder test', function() {
-    var template = parse('<div r-html="label"></div>');
+    var template = parse('<div [html]="label"></div>');
     var model = { label: '<b>test</b>' };
 
     it('should execute text binders', function() {
@@ -49,7 +49,7 @@ describe('binders unit test', function() {
   });
 
   describe('class binder test', function() {
-    var template = parse('<div r-class="test: isTest"></div>');
+    var template = parse('<div [class]="test: isTest"></div>');
     var model = { isTest: true };
 
     it('should execute class binder', function() {
@@ -71,7 +71,7 @@ describe('binders unit test', function() {
   });
 
   describe('attr binder test', function() {
-    var template = parse('<div r-attr="test: testValue"></div>');
+    var template = parse('<div [attr]="test: testValue"></div>');
     var model = { testValue: 'test' };
 
     it('should execute class binder', function() {
@@ -93,7 +93,7 @@ describe('binders unit test', function() {
   });
 
   describe('show binder test', function() {
-    var template = parse('<div r-show="visible"></div>');
+    var template = parse('<div [show]="visible"></div>');
     var model = { visible: true };
 
     it('should execute class binder', function() {
@@ -115,7 +115,7 @@ describe('binders unit test', function() {
   });
 
   describe('hide binder test', function() {
-    var template = parse('<div r-hide="visible"></div>');
+    var template = parse('<div [hide]="visible"></div>');
     var model = { hidden: false };
 
     it('should execute class binder', function() {

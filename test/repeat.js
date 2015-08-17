@@ -6,7 +6,7 @@ describe('repeat binder unit test', function() {
 
   describe('basic use, no update', function() {
     it('should have repeat binder in parentNode', function() {
-      var html = '<ul><li r-repeat="item in items">{{item.text}}</li></ul>';
+      var html = '<ul><li repeat="item in items">{{item.text}}</li></ul>';
       var template = parse(html);
 
       var view = Reactive(template, {
@@ -17,7 +17,7 @@ describe('repeat binder unit test', function() {
     });
 
     it('should create multi repeat binder', function() {
-      var html = '<div><ul><li r-repeat="item in items">{{item.text}}</li></ul><ul><li r-repeat="item in items">{{item.text}}</li></ul></div>';
+      var html = '<div><ul><li repeat="item in items">{{item.text}}</li></ul><ul><li repeat="item in items">{{item.text}}</li></ul></div>';
       var template = parse(html);
 
       var view = Reactive(template, {
@@ -28,7 +28,7 @@ describe('repeat binder unit test', function() {
     });
 
     it('should create nested repeat binder', function() {
-      var html = '<div><ul><li r-repeat="item in items"><ul><li r-repeat="item in item.items">{{item.text}}</li></ul>{{item.text}}</li></ul></div>';
+      var html = '<div><ul><li repeat="item in items"><ul><li repeat="item in item.items">{{item.text}}</li></ul>{{item.text}}</li></ul></div>';
       var template = parse(html);
 
       var view = Reactive(template, {
@@ -43,7 +43,7 @@ describe('repeat binder unit test', function() {
 
   describe('basic update', function() {
     it('should update when array change', function(done) {
-      var html = '<ul><li r-repeat="item in items">{{item.text}}</li></ul>';
+      var html = '<ul><li repeat="item in items">{{item.text}}</li></ul>';
       var template = parse(html);
 
       //console.log(template);
@@ -62,7 +62,7 @@ describe('repeat binder unit test', function() {
     });
 
     it('should update reserve old dom when update', function(done) {
-      var html = '<ul><li r-repeat="item in items track by item.text">{{item.text}}</li></ul>';
+      var html = '<ul><li repeat="item in items track by item.text">{{item.text}}</li></ul>';
       var template = parse(html);
 
       var view = Reactive(template, {

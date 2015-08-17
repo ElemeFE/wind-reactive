@@ -6,7 +6,7 @@
   "dependencies": {
     "wind-dom": "0.0.3",
     "wind-expression": "0.0.1",
-    "wind-compiler": "0.0.7"
+    "wind-compiler": "0.0.10"
   },
   "devDependencies": {
     "mocha": "~2.2.5",
