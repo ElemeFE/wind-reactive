@@ -1,3 +1,4 @@
-var domUtil = require('wind-dom');
-
-module.exports = {};
+module.exports = {
+  Reactive: require('./reactive'),
+  View: require('./view/view')
+};
