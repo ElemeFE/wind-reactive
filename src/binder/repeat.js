@@ -1,18 +1,19 @@
 var util = require('../util');
 
-var expression = require('wind-expression');
-var compileExpr = expression.compileExpr;
-
 var RepeatBinder = function(el, valueFn, extra) {
   this.element = el;
   this.valueFn = valueFn;
   this.extra = extra;
 
-  this.refNode = this.extra.refNode;
+  this.trackByFn = new Function('return this.' + extra.trackBy + ';');
+  if (extra.trackBy === '$index') {
+    this.trackByIndex = true;
+  }
+  this.itemKey = extra.item;
+  this.value = extra.value;
 
   this.itemTemplate = extra.itemTemplate;
-
-  this.parseExpression(extra.expression);
+  this.refNode = extra.refNode;
 };
 
 var newContext = function() {
@@ -23,45 +24,6 @@ var insertAfter = function(node, refNode) {
   if (refNode.parentNode) {
     refNode.parentNode.insertBefore(node, refNode.nextSibling);
   }
-};
-
-RepeatBinder.prototype.parseExpression = function (expression) {
-  var nameOfKey;
-  var valueExpression;
-  var trackByExpression;
-
-  var matches = expression.match(/\s*([\d\w]+)\s+in\s+(.+)\s+track\s+by\s+(.+)/);
-
-  if (matches) {
-    nameOfKey = matches[1];
-    valueExpression = matches[2];
-    trackByExpression = matches[3];
-  } else {
-    matches = expression.match(/\s*([\d\w]+)\s+in\s+(.+)/);
-    if (!matches) {
-      throw 'Wrong expression of repeat: ' + expression;
-    }
-
-    nameOfKey = matches[1];
-    valueExpression = matches[2];
-  }
-
-  if (trackByExpression === undefined) {
-    trackByExpression = '$index';
-    this.trackByIndex = true;
-  }
-
-  this.itemKey = nameOfKey;
-  this.trackBy = trackByExpression;
-  this.value = valueExpression;
-
-  this.trackByFn = compileExpr(trackByExpression);
-
-  return {
-    itemKey: nameOfKey,
-    trackBy: trackByExpression,
-    value: valueExpression
-  };
 };
 
 RepeatBinder.prototype.diff = function (current) {
@@ -199,13 +161,9 @@ RepeatBinder.prototype.patch = function (patch) {
 };
 
 RepeatBinder.prototype.update = function() {
-  var extra = this.extra;
   var model = this.model;
 
-  var expression = extra.expression;
-  var result = this.parseExpression(expression);
-
-  var array = util.getPath(model, result.value) || [];
+  var array = util.getPath(model, this.value) || [];
 
   var patches = this.diff(array);
   this.patch(patches);
