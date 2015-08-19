@@ -51,6 +51,18 @@ binders.attr = function(el, value, attr) {
   }
 };
 
+binders.style = function(el, value, styleName) {
+  if (value === undefined || value === null) {
+    value = '';
+  } else {
+    value = '' + value;
+  }
+
+  if (el && styleName) {
+    domUtil.setStyle(el, styleName, value);
+  }
+};
+
 binders.event = function(el, value, eventName) {
   if (el && eventName && value) {
     el.addEventListener(eventName, value, false);
