@@ -24,6 +24,25 @@ var set = function(object, prop, value) {
   }
 };
 
+var COMMENT_NODE_TYPE = 8;
+
+var getCommentNodeAt = function(node, index) {
+  index = index || 0;
+  var current = node.firstChild;
+  var count = 0;
+  while (current) {
+    if (current.nodeType === COMMENT_NODE_TYPE) {
+      if (count === index) {
+        return current;
+      }
+      count++;
+    }
+    current = current.nextSibling;
+  }
+
+  return null;
+};
+
 module.exports = {
   getPath: function(object, prop) {
     prop = prop || '';
@@ -67,6 +86,12 @@ module.exports = {
           parentNode.insertBefore(node, refNode.nextSibling);
         } else {
           throw new Error('refNode is required when insertMode is after!');
+        }
+        break;
+      case 'comment':
+        if (typeof refNode === 'number') {
+          var commentNode = getCommentNodeAt(parentNode, refNode);
+          parentNode.insertBefore(node, commentNode.nextSibling);
         }
         break;
     }

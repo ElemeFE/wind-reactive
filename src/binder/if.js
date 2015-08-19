@@ -18,6 +18,7 @@ IFBinder.prototype.update = function() {
 
   value = !!value;
   if (value) {
+    if (this.dom) return;
     dom = create(extra.template);
     this.dom = dom;
 
@@ -26,6 +27,10 @@ IFBinder.prototype.update = function() {
 
     if (typeof refNode === 'string') {
       refNode = null;
+    }
+
+    if (extra.commentIndex !== undefined) {
+      refNode = extra.commentIndex;
     }
 
     util.insertNode(dom, element, insertMode, refNode);

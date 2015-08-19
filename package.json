@@ -1,6 +1,6 @@
 {
   "name": "wind-reactive",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A template reactive for data change",
   "main": "src/index.js",
   "dependencies": {
@@ -10,7 +10,7 @@
     "mocha": "~2.2.5",
     "should": "~7.0.2",
     "sinon": "~1.10.2",
-    "wind-compiler": "0.0.13"
+    "wind-compiler": "0.0.17"
   },
   "scripts": {
     "watch": "watchify test/index.js -o dist/test.js -dv",

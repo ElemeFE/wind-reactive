@@ -13,6 +13,10 @@ var create = function(config, refs, hook) {
     return textNode;
   }
 
+  if (config.hasOwnProperty('$comment')) {
+    return document.createComment(config.$comment || '');
+  }
+
   if (config.$tag) {
     dom = document.createElement(config.$tag);
     for (var prop in config) {
