@@ -53,7 +53,7 @@ describe('View unit test', function() {
   describe('controller bind or state bind?', function() {
     this.slow(2000);
 
-    it('should create nested view', function(done) {
+    it('should create custom element with binder', function(done) {
       var template = compile('<r-carousel ref="test" horizontal duration="300" [test]="testValue"></r-carousel>');
 
       var model = {
@@ -65,6 +65,24 @@ describe('View unit test', function() {
       setTimeout(function() {
         view.refs['test'].get('test').should.equal('test');
         done();
+      }, 50);
+    });
+
+    it('should use repeat in slide correctly', function() {
+      var template = compile('<div><r-carousel><r-slide repeat="item in items">{{item}}</r-slide></r-carousel></div>');
+
+      console.log(template);
+
+      var model = {
+        items: ['a', 'b', 'c']
+      };
+
+      var view = Reactive(template, model);
+
+      console.log(view.element);
+
+      setTimeout(function() {
+
       }, 50);
     });
   });

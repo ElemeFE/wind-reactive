@@ -1,6 +1,7 @@
 var create = require('./create');
 var binder = require('./binder');
 var util = require('./util');
+var getFilter = require('./filter');
 
 var getBinder = binder.get;
 
@@ -10,6 +11,8 @@ var updateBinder = function(type, el, value, extra, model) {
     fn.call(model, el, value, extra);
   }
 };
+
+var config = require('./config');
 
 var Reactive = function(template, model, options) {
   if (!(this instanceof Reactive)) {
@@ -22,7 +25,18 @@ var Reactive = function(template, model, options) {
   this.template = template;
   this.model = model;
 
-  var adapter = options.adapter;
+  this.model.$getFilter = function(name) {
+    var filter = getFilter(name);
+    if (!filter) {
+      console.warn('NO FILTER FOUND:' + name);
+      return function(value) {
+        return value;
+      };
+    }
+    return filter;
+  };
+
+  var adapter = options.adapter || config.getDefaultAdapter();
 
   if (typeof adapter === 'function') {
     this.adapter = new adapter(model);
@@ -65,7 +79,7 @@ Reactive.prototype.initBinding = function() {
       }
 
       if (binding.extra && typeof binding.extra.refNode === 'string') {
-        binding.extra.refNode = refs[binding.extra.refNode];
+        binding.refNode = refs[binding.extra.refNode];
       }
 
       bindings.push(binding);

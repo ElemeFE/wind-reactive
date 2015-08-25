@@ -1,10 +1,10 @@
-var create = require('../create');
 var util = require('../util');
 
-var IFBinder = function(el, valueFn, extra) {
+var IFBinder = function(el, valueFn, extra, model) {
   this.element = el;
   this.valueFn = valueFn;
   this.extra = extra;
+  this.model = model;
 };
 
 IFBinder.prototype.update = function() {
@@ -12,18 +12,24 @@ IFBinder.prototype.update = function() {
   if (typeof element === 'string') {
     element = this.element = this.reactive.refs[element];
   }
+
   var extra = this.extra;
   var value = this.valueFn();
+
   var dom;
+
+  var Reactive = require('../reactive');
 
   value = !!value;
   if (value) {
     if (this.dom) return;
-    dom = create(extra.template);
+
+    var view = Reactive(extra.template, this.model);
+    dom = view.element;
     this.dom = dom;
 
     var insertMode = extra.insertMode;
-    var refNode = extra.refNode;
+    var refNode = this.refNode;
 
     if (typeof refNode === 'string') {
       refNode = null;

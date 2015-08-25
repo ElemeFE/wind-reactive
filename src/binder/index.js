@@ -23,6 +23,7 @@ for (var name in basicBinders) {
 
 register('if', require('./if'));
 register('repeat', require('./repeat'));
+register('model', require('./model'));
 
 module.exports = {
   register: register,

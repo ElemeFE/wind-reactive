@@ -38,13 +38,19 @@ binders['class'] = function(el, value, className) {
 binders.attr = function(el, value, attr) {
   if (value === undefined || value === null) {
     value = '';
-  } else {
-    value = '' + value;
   }
 
   if (el && attr) {
     if (el.nodeType) {
-      el[attr] = value;
+      if (attr === 'disabled') {
+        if (!!value) {
+          el.setAttribute('disabled', '');
+        } else {
+          el.removeAttribute('disabled');
+        }
+      } else {
+        el[attr] = value;
+      }
     } else if (el.set) {
       el.set(attr, value);
     }

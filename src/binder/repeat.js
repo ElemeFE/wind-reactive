@@ -13,11 +13,10 @@ var RepeatBinder = function(el, valueFn, extra) {
   this.value = extra.value;
 
   this.itemTemplate = extra.itemTemplate;
-  this.refNode = extra.refNode;
 };
 
-var newContext = function() {
-  return {};
+var newContext = function(context) {
+  return Object.create(context);
 };
 
 var insertAfter = function(node, refNode) {
@@ -36,7 +35,7 @@ RepeatBinder.prototype.diff = function (current) {
   for (var i = 0, j = current.length; i < j; i++) {
     var item = current[i];
 
-    var subContext = newContext(this.context);
+    var subContext = newContext(this.model);
     subContext.$index = i;
     subContext.$prev = prevContext ? trackByFn.call(prevContext) : null;
     subContext[nameOfKey] = item;
@@ -119,9 +118,16 @@ RepeatBinder.prototype.patch = function (patch) {
     delete itemElementMap[key];
   });
 
+  var itemKey = this.itemKey;
+
   added.forEach(function (newContext) {
     var prevKey = newContext.$prev;
     var refNode;
+
+    if (newContext.$add) {
+      console.log(itemKey, newContext[itemKey]);
+      newContext.$add(itemKey, newContext[itemKey]);
+    }
 
     if (prevKey !== null && prevKey !== undefined) {
       refNode = itemElementMap[prevKey];
@@ -129,7 +135,7 @@ RepeatBinder.prototype.patch = function (patch) {
       refNode = commentNode;
     }
 
-    var view = Reactive(itemTemplate, newContext);
+    var view = new Reactive(itemTemplate, newContext);
 
     if (refNode) {
       insertAfter(view.element, refNode);
@@ -163,7 +169,7 @@ RepeatBinder.prototype.patch = function (patch) {
 RepeatBinder.prototype.update = function() {
   var model = this.model;
 
-  var array = util.getPath(model, this.value) || [];
+  var array = this.valueFn.call(model) || [];
 
   var patches = this.diff(array);
   this.patch(patches);

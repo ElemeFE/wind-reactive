@@ -1,5 +1,5 @@
 require('./util');
-
+require('./filter');
 require('./binder');
 require('./repeat');
 require('./if');

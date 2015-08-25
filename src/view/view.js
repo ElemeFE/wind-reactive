@@ -35,6 +35,24 @@ View.prototype = {
   unmount: function() {
   },
 
+  addChild: function(child) {
+  },
+
+  removeChild: function(child) {
+  },
+
+  insertBefore: function(child, refNode) {
+    var component = this;
+
+    var contentBinder = component.template.contentBinder;
+
+    if (contentBinder) {
+      var parentNode = component.refs[contentBinder.node];
+
+      parentNode.appendChild(child);
+    }
+  },
+
   render: function() {
     if (!this.template) {
       throw new Error('template is empty!');
@@ -47,6 +65,8 @@ View.prototype = {
     });
 
     this.refs = view.refs;
+
+    this.element = view.element;
 
     return view.element;
   },
