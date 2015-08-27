@@ -35,7 +35,7 @@ RepeatBinder.prototype.diff = function (current) {
   for (var i = 0, j = current.length; i < j; i++) {
     var item = current[i];
 
-    var subContext = newContext(this.model);
+    var subContext = {};
     subContext.$index = i;
     subContext.$prev = prevContext ? trackByFn.call(prevContext) : null;
     subContext[nameOfKey] = item;
@@ -120,14 +120,15 @@ RepeatBinder.prototype.patch = function (patch) {
 
   var itemKey = this.itemKey;
 
+  var model = this.model;
+
   added.forEach(function (newContext) {
+    if (model.$extend) {
+      newContext = model.$extend(newContext);
+    }
+
     var prevKey = newContext.$prev;
     var refNode;
-
-    if (newContext.$add) {
-      console.log(itemKey, newContext[itemKey]);
-      newContext.$add(itemKey, newContext[itemKey]);
-    }
 
     if (prevKey !== null && prevKey !== undefined) {
       refNode = itemElementMap[prevKey];

@@ -12,9 +12,15 @@ Adapter.prototype = {
   constructor: Adapter,
 
   subscribe: function(prop, fn) {
+    if (this.object.$watch) {
+      this.object.$watch(prop, fn);
+    }
   },
 
   unsubscribe: function(prop, fn) {
+    if (this.object.$unwatch) {
+      this.object.$unwatch(prop, fn);
+    }
   },
 
   unsubscribeAll: function() {
