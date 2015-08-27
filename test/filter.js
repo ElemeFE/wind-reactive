@@ -200,4 +200,11 @@ describe('Filter UnitTest', function () {
     });
     result.should.eql(['4', '2', '3', '7', '6', '1', '5', '8']);
   });
+
+  it('should format date use date filter', function() {
+    var filter = getFilter('date');
+    filter(new Date(2001, 2, 22)).should.equal('2001-03-22');
+    filter(new Date(2001, 2, 22), 'yyyy/MM/dd').should.equal('2001/03/22');
+    filter(new Date(2001, 2, 22, 15, 15, 15), 'hh:mm:ss').should.equal('15:15:15');
+  });
 });

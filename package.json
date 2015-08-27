@@ -1,6 +1,6 @@
 {
   "name": "wind-reactive",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A template reactive for data change",
   "main": "src/index.js",
   "dependencies": {
