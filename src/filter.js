@@ -169,6 +169,17 @@ filters.orderBy = function(value, expression, reverse) {
   return value;
 };
 
-module.exports = getFilter = function(filterName) {
-  return filters[filterName];
+filters.noop = function(value) {
+  return value;
+};
+
+module.exports = {
+  getFilter: function(filterName) {
+    return filters[filterName];
+  },
+  registerFilter: function(name, fn) {
+    if (typeof name === 'string' && typeof fn === 'function') {
+      filters[name] = fn;
+    }
+  }
 };

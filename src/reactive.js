@@ -1,7 +1,7 @@
 var create = require('./create');
 var binder = require('./binder');
 var util = require('./util');
-var getFilter = require('./filter');
+var getFilter = require('./filter').getFilter;
 
 var getBinder = binder.get;
 

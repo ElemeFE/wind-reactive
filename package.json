@@ -1,6 +1,6 @@
 {
   "name": "wind-reactive",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A template reactive for data change",
   "main": "src/index.js",
   "dependencies": {
@@ -13,7 +13,7 @@
     "wind-compiler": "0.0.18"
   },
   "scripts": {
-    "watch": "watchify test/index.js -o dist/test.js -dv",
+    "dev": "watchify test/index.js -o dist/test.js -dv",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "long.zhang",

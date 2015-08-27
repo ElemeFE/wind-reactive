@@ -1,8 +1,8 @@
-var getFilter = require('../src/filter');
+var getFilter = require('../src/filter').getFilter;
+var registerFilter = require('../src/filter').registerFilter;
 
 describe('Filter UnitTest', function () {
-  var friends;
-  friends = [
+  var friends = [
     {
       id: '1',
       name: 'John',
@@ -37,6 +37,13 @@ describe('Filter UnitTest', function () {
       phone: '555-5678'
     }
   ];
+
+  it('should register custom filter', function() {
+    var custom = sinon.spy();
+    registerFilter('custom', custom);
+    var filter = getFilter('custom');
+    filter.should.equal(custom);
+  });
 
   it('should convert string to uppercase when use uppercase ', function () {
     var filter = getFilter('uppercase');
@@ -78,6 +85,7 @@ describe('Filter UnitTest', function () {
     result.length.should.equal(3);
     result.should.eql(['1', '6', '7']);
   });
+
   it('should filter array when use filter with object parameter', function () {
     var filter = getFilter('filter');
     var result = filter(friends, {

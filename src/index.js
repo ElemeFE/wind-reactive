@@ -1,4 +1,5 @@
 var config = require('./config');
+var filter = require('./filter');
 
 module.exports = {
   Reactive: require('./reactive'),
@@ -6,5 +7,7 @@ module.exports = {
   ViewFactory: require('./view/factory'),
   Adapter: require('./adapter'),
   getDefaultAdapter: config.getDefaultAdapter,
-  setDefaultAdapter: config.setDefaultAdapter
+  setDefaultAdapter: config.setDefaultAdapter,
+  registerFilter: filter.registerFilter,
+  getFilter: filter.getFilter
 };
