@@ -1,11 +1,11 @@
 var util = require('../util');
 var dom = require('wind-dom');
 
-var ModelBinder = function(el, valueFn, extra) {
+var ModelBinder = function(el, options, context) {
   this.element = el;
   this.valueFn = null;
-  this.valuePath = extra;
-
+  this.valuePath = options.key;
+  this.context = context;
   this.eventBinded = false;
 };
 
@@ -20,15 +20,15 @@ ModelBinder.prototype.update = function() {
     var self = this;
 
     var callback = function() {
-      var model = self.model;
-      if (model.$set) {
+      var context = self.context;
+      if (context.$set) {
         if (el.type === 'checkbox') {
-          model.$set(path, el.checked);
+          context.$set(path, el.checked);
         } else {
-          model.$set(path, el.value);
+          context.$set(path, el.value);
         }
       } else {
-        util.setPath(model, path, el.value);
+        util.setPath(context, path, el.value);
       }
     };
 
@@ -38,12 +38,12 @@ ModelBinder.prototype.update = function() {
     this.eventBinded = true;
   }
 
-  var model = this.model;
+  var context = this.context;
   var value;
-  if (model.$get)
-    value = model.$get(path);
+  if (context.$get)
+    value = context.$get(path);
   else {
-    value = util.getPath(model, path);
+    value = util.getPath(context, path);
   }
 
   if (this.element.value !== value) {

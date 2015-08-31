@@ -27,29 +27,39 @@ describe('Reactive unit test', function() {
       var binders = [{
         type: 'text',
         el: 'label',
-        property: 'label'
+        options: {
+          fn: function() { return this.label; }
+        }
       }, {
         type: 'attr',
         el: 'editor',
         $ref: 'placeholder',
-        property: 'placeholder'
+        options: {
+          fn: function() { return this.placeholder; }
+        }
       }, {
         type: 'html',
         el: 'message',
-        property: 'message'
+        options: {
+          fn: function() { return this.message; }
+        }
       }, {
         type: 'class',
         $ref: 'validate-error',
         el: 'field',
-        fn: function() {
-          return this.hintType === 'error';
+        options: {
+          fn: function() {
+            return this.hintType === 'error';
+          }
         }
       }, {
         type: 'class',
         $ref: 'icon-dot-error',
         el: 'message',
-        fn: function() {
-          return this.hintType === 'error';
+        options: {
+          fn: function() {
+            return this.hintType === 'error';
+          }
         }
       }];
 

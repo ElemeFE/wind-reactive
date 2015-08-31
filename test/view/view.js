@@ -56,6 +56,8 @@ describe('View unit test', function() {
     it('should create custom element with binder', function(done) {
       var template = compile('<r-carousel ref="test" horizontal duration="300" [test]="testValue"></r-carousel>');
 
+      console.log(template);
+
       var model = {
         testValue: 'test'
       };
@@ -63,6 +65,7 @@ describe('View unit test', function() {
       var view = Reactive(template, model);
 
       setTimeout(function() {
+
         view.refs['test'].get('test').should.equal('test');
         done();
       }, 50);
@@ -70,8 +73,6 @@ describe('View unit test', function() {
 
     it('should use repeat in slide correctly', function() {
       var template = compile('<div><r-carousel><r-slide repeat="item in items">{{item}}</r-slide></r-carousel></div>');
-
-      console.log(template);
 
       var model = {
         items: ['a', 'b', 'c']

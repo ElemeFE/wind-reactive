@@ -41,6 +41,8 @@ describe('if binder unit test', function() {
   it('should execute right in a complicated situation', function(done) {
     var template = compile('<div><span></span><a if="testA"></a><b if="testB"></b><c if="testC"></c><d if="testD"></d></div>');
 
+    console.log(template);
+
     var view = Reactive(template, {
       testA: true,
       testB: false,

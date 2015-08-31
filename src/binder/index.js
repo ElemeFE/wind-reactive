@@ -27,34 +27,29 @@ register('model', require('./model'));
 
 module.exports = {
   register: register,
-  create: function(options, model) {
+  create: function(options, context, reactive) {
     var type = options.type;
+    var binderOptions = options.options || {};
+
+    var refs = reactive.refs;
 
     var constructor = binders[type];
 
+    if (type === 'prop' && binderOptions.key) {
+      if (binders[binderOptions.key]) {
+        constructor = binders[binderOptions.key];
+      } else {
+        constructor = binders.attr;
+      }
+    }
+
     if (constructor) {
       var el = options.el;
-      var extra = options.extra;
-      var property = options.property;
-      var fn = options.fn;
-
-      var valueFn;
-
-      if (fn) {
-        valueFn = function() {
-          return fn.call(model);
-        };
-      } else if (!fn && property) {
-        valueFn = function() {
-          return util.getPath(model, property);
-        };
+      if (typeof el === 'string') {
+        el = refs[el];
       }
 
-      var binder = new constructor(el, valueFn, extra);
-
-      binder.model = model;
-
-      return binder;
+      return new constructor(el, binderOptions, context);
     }
   },
   get: function(name) {

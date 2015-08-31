@@ -1,10 +1,10 @@
 var util = require('../util');
 
-var IFBinder = function(el, valueFn, extra, model) {
+var IFBinder = function(el, options, context) {
   this.element = el;
-  this.valueFn = valueFn;
-  this.extra = extra;
-  this.model = model;
+  this.valueFn = options.fn && options.fn.bind(context);
+  this.options = options;
+  this.context = context;
 };
 
 IFBinder.prototype.update = function() {
@@ -13,7 +13,7 @@ IFBinder.prototype.update = function() {
     element = this.element = this.reactive.refs[element];
   }
 
-  var extra = this.extra;
+  var options = this.options;
   var value = this.valueFn();
 
   var dom;
@@ -24,19 +24,19 @@ IFBinder.prototype.update = function() {
   if (value) {
     if (this.dom) return;
 
-    var view = Reactive(extra.template, this.model);
+    var view = Reactive(options.template, this.context);
     dom = view.element;
     this.dom = dom;
 
-    var insertMode = extra.insertMode;
+    var insertMode = options.insertMode;
     var refNode = this.refNode;
 
     if (typeof refNode === 'string') {
       refNode = null;
     }
 
-    if (extra.commentIndex !== undefined) {
-      refNode = extra.commentIndex;
+    if (options.commentIndex !== undefined) {
+      refNode = options.commentIndex;
     }
 
     util.insertNode(dom, element, insertMode, refNode);

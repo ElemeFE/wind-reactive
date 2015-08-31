@@ -5,27 +5,27 @@ var getFilter = require('./filter').getFilter;
 
 var getBinder = binder.get;
 
-var updateBinder = function(type, el, value, extra, model) {
+var updateBinder = function(type, el, value, key, context) {
   var fn = getBinder(type);
   if (fn && el) {
-    fn.call(model, el, value, extra);
+    fn.call(context, el, value, key);
   }
 };
 
 var config = require('./config');
 
-var Reactive = function(template, model, options) {
+var Reactive = function(template, context, options) {
   if (!(this instanceof Reactive)) {
-    return new Reactive(template, model, options);
+    return new Reactive(template, context, options);
   }
 
   if (typeof template === 'string') throw new Error('template is not compiled.');
   options = options || {};
 
   this.template = template;
-  this.model = model;
+  this.context = context;
 
-  this.model.$getFilter = function(name) {
+  this.context.$getFilter = function(name) {
     var filter = getFilter(name);
     if (!filter) {
       console.warn('NO FILTER FOUND:' + name);
@@ -39,7 +39,7 @@ var Reactive = function(template, model, options) {
   var adapter = options.adapter || config.getDefaultAdapter();
 
   if (typeof adapter === 'function') {
-    this.adapter = new adapter(model);
+    this.adapter = new adapter(context);
   } else {
     this.adapter = adapter;
   }
@@ -64,22 +64,31 @@ var Reactive = function(template, model, options) {
 
 Reactive.prototype.initBinding = function() {
   var template = this.template;
-  var model = this.model;
+  var context = this.context;
   var binders = template.binders;
   var refs = this.refs;
   var bindings = [];
 
   for (var i = 0, j = binders.length; i < j; i++) {
     var temp = binders[i];
-    if (!binder.isSimpleBinder(temp.type)) {
-      var binding = binder.create(temp, model);
+
+    var isSimple = binder.isSimpleBinder(temp.type);
+    if (temp.type === 'prop' && temp.options && temp.options.key) {
+      isSimple = !binders[temp.options.key];
+      if (isSimple) {
+        temp.type = 'attr';
+      }
+    }
+
+    if (!isSimple) {
+      var binding = binder.create(temp, context, this);
 
       if (typeof binding.element === 'string') {
         binding.element = refs[binding.element];
       }
 
-      if (binding.extra && typeof binding.extra.refNode === 'string') {
-        binding.refNode = refs[binding.extra.refNode];
+      if (binding.options && typeof binding.options.refNode === 'string') {
+        binding.refNode = refs[binding.options.refNode];
       }
 
       bindings.push(binding);
@@ -129,7 +138,7 @@ Reactive.prototype.initSubscribe = function() {
 
 Reactive.prototype.updateBinding = function(binding) {
   var bindings = this.bindings;
-  var model = this.model;
+  var context = this.context;
   var refs = this.refs;
 
   if (typeof binding === 'number') {
@@ -146,9 +155,9 @@ Reactive.prototype.updateBinding = function(binding) {
 
   var type = binding.type;
   var element = binding.el;
-  var extra = binding.extra;
+  var options = binding.options || {};
   var property = binding.property;
-  var fn = binding.fn;
+  var fn = options.fn;
 
   if (typeof element === 'string') {
     element = refs[element];
@@ -159,18 +168,18 @@ Reactive.prototype.updateBinding = function(binding) {
   var value;
 
   if (binding.type === 'event') {
-    value = fn.bind(model);
+    value = fn.bind(context);
   } else {
     if (typeof fn === 'function') {
-      value = fn.call(model);
+      value = fn.call(context);
     } else if (property) {
-      value = model[property];
+      value = context[property];
     } else {
       throw new Error('invalid binder');
     }
   }
 
-  updateBinder(type, element, value, extra, model);
+  updateBinder(type, element, value, options.key, context);
 };
 
 Reactive.prototype.updateByProperty = function(prop) {
@@ -221,7 +230,7 @@ Reactive.prototype.markDirty = function(prop) {
 };
 
 Reactive.prototype.set = function(prop, value) {
-  var model = this.model;
+  var context = this.context;
   if (prop === undefined || prop === null) return;
 
   if (typeof prop === 'object') {
@@ -234,7 +243,7 @@ Reactive.prototype.set = function(prop, value) {
   } else {
     prop = prop || '';
     var paths = prop.split('.');
-    var current = model;
+    var current = context;
     for (var i = 0, j = paths.length; i < j; i++) {
       var path = paths[i];
       if (!current) break;
@@ -249,7 +258,7 @@ Reactive.prototype.set = function(prop, value) {
 };
 
 Reactive.prototype.get = function(prop) {
-  return util.getPath(this.model, prop);
+  return util.getPath(this.context, prop);
 };
 
 module.exports = Reactive;

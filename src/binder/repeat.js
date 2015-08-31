@@ -1,18 +1,19 @@
 var util = require('../util');
 
-var RepeatBinder = function(el, valueFn, extra) {
+var RepeatBinder = function(el, options, context) {
   this.element = el;
-  this.valueFn = valueFn;
-  this.extra = extra;
+  this.valueFn = options.fn && options.fn.bind(context);
+  this.extra = options;
+  this.context = context;
 
-  this.trackByFn = new Function('return this.' + extra.trackBy + ';');
-  if (extra.trackBy === '$index') {
+  this.trackByFn = new Function('return this.' + options.trackBy + ';');
+  if (options.trackBy === '$index') {
     this.trackByIndex = true;
   }
-  this.itemKey = extra.item;
-  this.value = extra.value;
+  this.itemKey = options.item;
+  this.value = options.value;
 
-  this.itemTemplate = extra.itemTemplate;
+  this.itemTemplate = options.itemTemplate;
 };
 
 var newContext = function(context) {
@@ -120,11 +121,11 @@ RepeatBinder.prototype.patch = function (patch) {
 
   var itemKey = this.itemKey;
 
-  var model = this.model;
+  var context = this.context;
 
   added.forEach(function (newContext) {
-    if (model.$extend) {
-      newContext = model.$extend(newContext);
+    if (context.$extend) {
+      newContext = context.$extend(newContext);
     }
 
     var prevKey = newContext.$prev;
@@ -168,9 +169,9 @@ RepeatBinder.prototype.patch = function (patch) {
 };
 
 RepeatBinder.prototype.update = function() {
-  var model = this.model;
+  var context = this.context;
 
-  var array = this.valueFn.call(model) || [];
+  var array = this.valueFn.call(context) || [];
 
   var patches = this.diff(array);
   this.patch(patches);
