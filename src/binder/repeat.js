@@ -99,6 +99,8 @@ RepeatBinder.prototype.patch = function (patch) {
   var trackByFn = this.trackByFn;
   var commentNode = this.refNode;
 
+  console.log(commentNode);
+
   var added = patch.added;
   var removed = patch.removed;
   var moved = patch.moved;

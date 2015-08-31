@@ -29,7 +29,11 @@ var create = function(config, refs, hook) {
           }
           continue;
         }
-        dom[prop] = config[prop];
+        if (prop !== 'className') {
+          dom.setAttribute(prop, config[prop]);
+        } else {
+          dom[prop] = config[prop];
+        }
       }
     }
     content = config.$content;

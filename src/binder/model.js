@@ -4,15 +4,15 @@ var dom = require('wind-dom');
 var ModelBinder = function(el, options, context) {
   this.element = el;
   this.valueFn = null;
-  this.valuePath = options.key;
+  this.valuePath = options.extra;
   this.context = context;
   this.eventBinded = false;
 };
 
 ModelBinder.prototype.update = function() {
   var path = this.valuePath;
+  var el = this.element;
   if (!this.eventBinded) {
-    var el = this.element;
     if (typeof el === 'string') {
       el = this.element = this.reactive.refs[el];
     }
@@ -23,7 +23,11 @@ ModelBinder.prototype.update = function() {
       var context = self.context;
       if (context.$set) {
         if (el.type === 'checkbox') {
-          context.$set(path, el.checked);
+          context.$set(path, !!el.checked);
+        } else if (el.type === 'radio') {
+          if (el.checked) {
+            context.$set(path, el.value);
+          }
         } else {
           context.$set(path, el.value);
         }
@@ -33,21 +37,37 @@ ModelBinder.prototype.update = function() {
     };
 
     dom.on(el, 'change', callback);
-    dom.on(el, 'keyup', callback);
+    if (el.type === 'text') {
+      dom.on(el, 'keyup', callback);
+    }
 
     this.eventBinded = true;
   }
 
   var context = this.context;
   var value;
-  if (context.$get)
+  if (context.$get) {
     value = context.$get(path);
-  else {
+  } else {
     value = util.getPath(context, path);
   }
 
-  if (this.element.value !== value) {
-    this.element.value = value;
+  var checked;
+  if (el.type === 'checkbox') {
+    checked = !!value;
+    if (el.checked !== checked) {
+      el.checked = checked;
+    }
+  } else if (el.type === 'radio') {
+    var inputValue = el.value;
+    checked = inputValue == value;
+    if (el.checked !== checked) {
+      el.checked = checked;
+    }
+  } else {
+    if (el.value !== value) {
+      el.value = value;
+    }
   }
 };
 

@@ -87,8 +87,8 @@ Reactive.prototype.initBinding = function() {
         binding.element = refs[binding.element];
       }
 
-      if (binding.options && typeof binding.options.refNode === 'string') {
-        binding.refNode = refs[binding.options.refNode];
+      if (temp.options && typeof temp.options.refNode === 'string') {
+        binding.refNode = refs[temp.options.refNode];
       }
 
       bindings.push(binding);
@@ -174,8 +174,6 @@ Reactive.prototype.updateBinding = function(binding) {
       value = fn.call(context);
     } else if (property) {
       value = context[property];
-    } else {
-      throw new Error('invalid binder');
     }
   }
 
