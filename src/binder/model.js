@@ -13,10 +13,6 @@ ModelBinder.prototype.update = function() {
   var path = this.valuePath;
   var el = this.element;
   if (!this.eventBinded) {
-    if (typeof el === 'string') {
-      el = this.element = this.reactive.refs[el];
-    }
-
     var self = this;
 
     var callback = function() {
@@ -26,10 +22,18 @@ ModelBinder.prototype.update = function() {
           context.$set(path, !!el.checked);
         } else if (el.type === 'radio') {
           if (el.checked) {
-            context.$set(path, el.value);
+            if (el.hasAttribute('number')) {
+              context.$set(path, Number(el.value));
+            } else {
+              context.$set(path, el.value);
+            }
           }
         } else {
-          context.$set(path, el.value);
+          if (el.hasOwnProperty('number')) {
+            context.$set(path, Number(el.value));
+          } else {
+            context.$set(path, el.value);
+          }
         }
       } else {
         util.setPath(context, path, el.value);
