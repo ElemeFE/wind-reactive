@@ -37,8 +37,8 @@ ModelBinder.prototype.update = function() {
     };
 
     dom.on(el, 'change', callback);
-    if (el.type === 'text') {
-      dom.on(el, 'keyup', callback);
+    if (el.type !== 'checkbox' && el.type !== 'radio' && el.type !== 'range') {
+      dom.on(el, 'input', callback);
     }
 
     this.eventBinded = true;
