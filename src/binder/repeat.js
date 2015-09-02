@@ -1,5 +1,3 @@
-var util = require('../util');
-
 var RepeatBinder = function(el, options, context) {
   this.element = el;
   this.valueFn = options.fn && options.fn.bind(context);
@@ -9,7 +7,7 @@ var RepeatBinder = function(el, options, context) {
 
   if (options.trackBy === '$index') {
     this.trackByIndex = true;
-    this.trackByFn = new Function('return this.' + options.trackBy + ';');
+    this.trackByFn = new Function('return this.$index;');
   } else {
     this.trackByFn = new Function('return this.' + options.item + '.' + options.trackBy + ';');
   }
@@ -17,10 +15,6 @@ var RepeatBinder = function(el, options, context) {
   this.value = options.value;
 
   this.itemTemplate = options.itemTemplate;
-};
-
-var newContext = function(context) {
-  return Object.create(context);
 };
 
 var insertAfter = function(node, refNode) {
@@ -128,7 +122,10 @@ RepeatBinder.prototype.patch = function (patch) {
 
   added.forEach(function (newContext) {
     if (context.$extend) {
+      var index = newContext.$index;
+      delete newContext.$index;
       newContext = context.$extend(newContext);
+      newContext.$index = index;
     }
 
     var prevKey = newContext.$prev;
