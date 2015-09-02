@@ -6,7 +6,7 @@ var RepeatBinder = function(el, options, context) {
   this.extra = options;
   this.context = context;
 
-  this.trackByFn = new Function('return this.' + options.trackBy + ';');
+  this.trackByFn = new Function('return this.' + options.item + '.' + options.trackBy + ';');
   if (options.trackBy === '$index') {
     this.trackByIndex = true;
   }
