@@ -6,9 +6,12 @@ var RepeatBinder = function(el, options, context) {
   this.extra = options;
   this.context = context;
 
-  this.trackByFn = new Function('return this.' + options.item + '.' + options.trackBy + ';');
+
   if (options.trackBy === '$index') {
     this.trackByIndex = true;
+    this.trackByFn = new Function('return this.' + options.trackBy + ';');
+  } else {
+    this.trackByFn = new Function('return this.' + options.item + '.' + options.trackBy + ';');
   }
   this.itemKey = options.item;
   this.value = options.value;
