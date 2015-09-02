@@ -74,7 +74,7 @@ Reactive.prototype.initBinding = function() {
 
     var isSimple = binder.isSimpleBinder(temp.type);
     if (temp.type === 'prop' && temp.options && temp.options.key) {
-      isSimple = !binders[temp.options.key];
+      isSimple = !getBinder(temp.options.key);
       if (isSimple) {
         temp.type = 'attr';
       }
