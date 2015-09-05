@@ -4,6 +4,19 @@ var Reactive = require('../src/reactive');
 describe('repeat binder unit test', function() {
   this.slow(2000);
 
+  describe('should work with filters', function() {
+    it('should subscribe orderBy field change', function() {
+      var html = '<ul><li repeat="item in items | orderBy: \'text\'">{{item.text}}</li></ul>';
+      var template = parse(html);
+
+      var view = Reactive(template, {
+        items: [{ text: 'a' }, { text: 'b' }, { text: 'c' }]
+      });
+
+      view.element.querySelectorAll('li').length.should.equal(3);
+    });
+  });
+
   describe('basic use, no update', function() {
     it('should have repeat binder in parentNode', function() {
       var html = '<ul><li repeat="item in items">{{item.text}}</li></ul>';

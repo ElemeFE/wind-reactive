@@ -4,7 +4,6 @@ var RepeatBinder = function(el, options, context) {
   this.extra = options;
   this.context = context;
 
-
   if (options.trackBy === '$index') {
     this.trackByIndex = true;
     this.trackByFn = new Function('return this.$index;');
@@ -13,6 +12,27 @@ var RepeatBinder = function(el, options, context) {
   }
   this.itemKey = options.item;
   this.value = options.value;
+
+  var filters = options.filters;
+
+  if (filters) {
+    for (var i = 0, k = filters.length; i < k; i++) {
+      var filter = filters[i];
+      if (filter.name === 'orderBy') {
+        var params = filter.params || [];
+        for (var j = 0, l = params.length; j < l; j++) {
+          var param = params[j];
+          if (param && (param[0] == '\'' || param[0] === '"')) {
+            var key = this.value + '.$each.' + param.substring(1, param.length - 1);
+
+            if (context && context.$watch) {
+              context.$watch(key, this);
+            }
+          }
+        }
+      }
+    }
+  }
 
   this.itemTemplate = options.itemTemplate;
 };
