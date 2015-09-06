@@ -123,6 +123,8 @@ RepeatBinder.prototype.patch = function (patch) {
   var Reactive = require('../reactive');
 
   var element = this.element;
+  var itemKey = this.itemKey;
+  var context = this.context;
 
   removed.forEach(function (removeContext) {
     var key = trackByFn.apply(removeContext);
@@ -130,25 +132,24 @@ RepeatBinder.prototype.patch = function (patch) {
     if (el && el.parentNode) {
       el.parentNode.removeChild(el);
     }
+
     if (removeContext.$destroy) {
       removeContext.$destroy();
     }
     delete itemElementMap[key];
   });
 
-  var itemKey = this.itemKey;
-
-  var context = this.context;
-
-  added.forEach(function (newContext) {
+  added.forEach(function (subContext) {
+    var newContext = subContext;
     if (context.$extend) {
-      var index = newContext.$index;
-      delete newContext.$index;
-      newContext = context.$extend(newContext);
+      var index = subContext.$index;
+      delete subContext.$index;
+      newContext = context.$extend(subContext);
+      subContext.$index = index;
       newContext.$index = index;
     }
 
-    var prevKey = newContext.$prev;
+    var prevKey = subContext.$prev;
     var refNode;
 
     if (prevKey !== null && prevKey !== undefined) {

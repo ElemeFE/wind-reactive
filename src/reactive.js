@@ -60,6 +60,10 @@ var Reactive = function(template, context, options) {
   for (var i = 0, j = bindings.length; i < j; i++) {
     this.updateBinding(bindings[i]);
   }
+
+  if (context && context.$emit) {
+    context.$emit('ready', context);
+  }
 };
 
 Reactive.prototype.initBinding = function() {
