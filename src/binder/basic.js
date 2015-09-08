@@ -3,7 +3,11 @@ var domUtil = require('wind-dom');
 var binders = {};
 
 binders.text = function(el, value) {
-  value = value ? value : '';
+  if (value === null || value === undefined) {
+    value = '';
+  } else {
+    value = '' + value;
+  }
   if (el.nodeType === 3) {
     el.nodeValue = value;
   } else {
@@ -12,7 +16,11 @@ binders.text = function(el, value) {
 };
 
 binders.html = function(el, value) {
-  value = value ? value : '';
+  if (value === null || value === undefined) {
+    value = '';
+  } else {
+    value = '' + value;
+  }
   el.innerHTML = value;
 };
 
